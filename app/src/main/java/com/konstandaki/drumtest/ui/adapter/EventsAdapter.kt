@@ -39,7 +39,8 @@ class EventsAdapter(private val events: MutableList<Event>) : ListAdapter<Event,
 
         fun bind(event: Event) {
             binding.apply {
-                tvEventTimer.text = event.start.toString()
+                cEventCountdown.base = event.start
+                cEventCountdown.start()
                 ivEventFavorite.setImageResource(if (event.isFavorite)  android.R.drawable.star_big_on
                     else android.R.drawable.star_big_off)
                 tvEventName.text = event.name

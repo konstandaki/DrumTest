@@ -34,7 +34,7 @@ class SportsAdapter : ListAdapter<Sport, SportsAdapter.SportViewHolder>(DiffCall
                 llSportHeader.setOnClickListener {
                     rvSportEvents.visibility = if (rvSportEvents.isShown) View.GONE else View.VISIBLE
                     ivSportArrow.setImageResource(if (rvSportEvents.isShown)  android.R.drawable.arrow_up_float
-                    else android.R.drawable.arrow_down_float)
+                        else android.R.drawable.arrow_down_float)
                 }
             }
         }

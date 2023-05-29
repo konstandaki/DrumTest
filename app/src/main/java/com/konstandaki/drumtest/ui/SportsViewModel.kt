@@ -8,11 +8,14 @@ import androidx.lifecycle.viewModelScope
 import com.konstandaki.drumtest.data.SportsRepository
 import com.konstandaki.drumtest.model.Sport
 import kotlinx.coroutines.launch
+import java.io.IOException
 
 class SportsViewModel(private val sportsRepository: SportsRepository) : ViewModel() {
 
-    private val _status = MutableLiveData<SportsApiStatus>()
-    val status: LiveData<SportsApiStatus> = _status
+    private var _eventNetworkError = MutableLiveData(false)
+
+    val eventNetworkError: LiveData<Boolean>
+        get() = _eventNetworkError
 
     private val _sports = MutableLiveData<List<Sport>>()
     val sports: LiveData<List<Sport>> = _sports
@@ -23,13 +26,12 @@ class SportsViewModel(private val sportsRepository: SportsRepository) : ViewMode
 
     private fun getSports() {
         viewModelScope.launch {
-            _status.value = SportsApiStatus.LOADING
             try {
                 _sports.value = sportsRepository.getSports()
-                _status.value = SportsApiStatus.DONE
-            } catch (e: Exception) {
-                _status.value = SportsApiStatus.ERROR
+                _eventNetworkError.value = false
+            } catch (networkError: IOException) {
                 _sports.value = listOf()
+                _eventNetworkError.value = true
             }
         }
     }
@@ -44,5 +46,3 @@ class SportsViewModelFactory(private val sportsRepository: SportsRepository) : V
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
-
-enum class SportsApiStatus { LOADING, ERROR, DONE }
